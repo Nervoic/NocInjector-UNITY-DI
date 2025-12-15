@@ -1,101 +1,31 @@
-
 <img width="4200" height="1500" alt="NOCINJECTOR_Banner" src="https://github.com/user-attachments/assets/cd82e2bc-40e8-4a02-9dca-7313176a561f" />
 
 
+## Unity 2022+, stable on IL2CPP, PC, WebGl, Android builds.
+## Is this NocInjector?
+NocInjector is a modern, high-performance, lightweight DI library for Unity, designed to combine simplicity, flexibility, and high performance, as well as functionality on virtually any device.
 
-## NocInjector - Dependency Injection Framework for Unity. Lightweight. Powerful. Elegant.
-- Unity version - 2022+, tested on IL2CPP, WebGL, Mobile, PC
+## Advantages
+- High runtime performance
+- Flexible dependency management
+- Simple and readable syntax
+- Fast learning curve
+- Highly extensible
+- Low memory consumption
+- Detailed documentation
+- **Contexts** scope system
+- Method and constructor injection
+- Dependency parameters during registration
+- Dependency lifetimes
 
-NocInjector is a dependency injection system specifically designed for Unity, combining enterprise-level architecture with exceptional performance.
+## Usage
+To use the library, you need to
+1. Download the latest released version
+2. Install the .unitypackage in your Unity project
+3. Use
 
-## Why NocInjector?
-- Performance First
-- Zero garbage allocation in runtime resolution
-- A flexible dependency management system and an event system
--- Optimized for high-frequency injection scenarios
+For detailed information about the library and usage instructions, see the Documentation folder.
 
-### Powerful Features
-```csharp
-// Fluent API for elegant registration
-container.Register<PlayerService>()
-         .AsImplementation<IPlayerService>()
-          .AsComponentOn(playerObject);
-         .WithTag("Main")
-
-// Advanced event-driven injection
-[Inject("Main")]
-private IAudioService _audioService;
-
-// Hierarchical context system
-[Inject(InjectContextLifetime.Project)]
-private IGameConfig _config;
-```
-## Enterprise Ready
-- Call system - Fully typed event system
-- Method & Field Injection - Flexible dependency injection
-- Context Management - Project/Scene/Object lifetime scopes and custom contexts
-- Unity support - Deep Unity integration
-
-## Installation
-Install NocInjector.unitypackage, and add to your Unity-project
-
-## Quick Start
-```csharp
-public class GameInstaller : Installer
-{
-    protected overrive void Install()
-    {
-        Register<GameManager>(Lifetime.Singleton);
-        Register<AudioService>().AsImplementation<IAudioService>().WithTag("MainAudio");
-    }
-}
-
-public class GameManager : MonoBehaviour
-{
-    [Inject("MainAudio")] private IAudioService _audioService;
-    
-    private void Start()
-    {
-        _audioService.PlayMusic(); // Injected automatically!
-    }
-}
-```
-## Features Deep Dive
-- Call system
-```csharp
-// Subscribe to events
-systemView.Follow<PlayerDiedEvent>(OnPlayerDied);
-
-// Publish events  
-systemView.Call(new PlayerDiedEvent(player));
-```
-## Context Hierarchy
-- Project Context - Global dependencies
-- Scene Context - Scene-specific dependencies
-- Object Context - GameObject-level scope
-
-## Advanced Injection
-```csharp
-// Method injection
-[Inject("MainAudio", "MainInput")]
-private void InitializeServices(IAudioService audio, IInputService input)
-{
-    // Dependencies injected automatically
-}
-
-// Post-injection callbacks
-[OnInjected]
-private void OnDependenciesInjected()
-{
-    // Called after all injections complete
-}
-```
-
-## Perfect For
-- Games of any complexity
-- Mobile games requiring maximum performance
-- Teams needing clean, maintainable and simple API
-- Projects with extensive Unity integration
-
-## Documentation
-- Check the Documentation folder for detailed documentation.
+## Developer Feedback -
+- Telegram `@nervoic`
+- Discord `nervoic`
