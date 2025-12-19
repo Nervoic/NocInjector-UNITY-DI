@@ -57,8 +57,6 @@ namespace NocInjector
                 Injector.InjectObject(injectionObject);
         }
         
-        
-        
         /// <summary>
         /// Creates a new child context that is independent of the unity
         /// </summary>

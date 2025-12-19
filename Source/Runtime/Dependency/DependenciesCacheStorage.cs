@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace NocInjector
 { 
-    internal sealed class DependenciesCacheStorage : IDisposable
+    internal sealed class DependenciesCacheStorage
     {
         private readonly Dictionary<Type, List<IDependency>> _typeCache = new();
         private readonly Dictionary<(Type, string), IDependency> _infoCache = new();
@@ -64,10 +64,5 @@ namespace NocInjector
         }
 
         public IEnumerable<IDependency> GetDependenciesFromCache(Type dependencyType) => _typeCache.GetValueOrDefault(dependencyType);
-
-        public void Dispose()
-        {
-            
-        }
     }
 }

@@ -38,7 +38,7 @@ namespace NocInjector
         {
             var constructionDependencyType = constructionDependency.DependencyType;
             
-            if (constructionDependencyType.IsSubclassOf(typeof(MonoBehaviour)) && constructionDependency.DependencyObject is null)
+            if (constructionDependencyType.IsSubclassOf(typeof(MonoBehaviour)) && constructionDependency.DependencyObject == null)
                 throw new InvalidOperationException($"You cannot register the {constructionDependency.DependencyType.Name} component without setting its GameObject");
             
         }
