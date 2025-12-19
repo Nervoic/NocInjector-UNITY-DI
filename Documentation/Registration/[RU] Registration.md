@@ -16,13 +16,21 @@ public class PlayerInstaller : MonoInstaller
     public override void Install(IContainerConstructor constructor) 
     {
         // Регистрация без указания абстракции
-        constructor.Register<PlayerController>();
+        constructor.Register<PlayerController>(DependencyLifetime.Singleton);
         
         // Регистрация как реализации интерфейса
-        constructor.Register<IPlayerController, PlayerController>();
+        constructor.Register<IPlayerController, PlayerController>(DependencyLifetime.Replaceable);
     }
 }
 ```
+
+## Времена жизни
+У каждой зависимости должно быть установлено время жизни. Описание каждого времени жизни -
+
+- **Singleton** - один экземпляр(с учетом тега и установленной абстракции) на весь контейнер,
+
+
+- **Transient** - каждый раз создается полностью новый экземпляр. Старый не очищается
 
 ## Плавучая регистрация
 Сразу после использования метода **Register** у конструктора контейнера, вам открывается доступ к указанию дополнительных параметров для зависимости.

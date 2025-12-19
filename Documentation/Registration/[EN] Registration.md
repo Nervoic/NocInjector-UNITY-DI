@@ -16,13 +16,21 @@ public class PlayerInstaller : MonoInstaller
     public override void Install(IContainerConstructor constructor) 
     { 
         // Registration without specifying an abstraction
-        constructor.Register<PlayerController>();
+        constructor.Register<PlayerController>(DependencyLifetime.Singleton);
         
         // Registration as an interface implementation
-        constructor.Register<IPlayerController, PlayerController>();
+        constructor.Register<IPlayerController, PlayerController>(DependencyLifetime.Singleton);
     }
 }
 ```
+
+## Lifetimes
+Each dependency must have a lifetime set. The description of each lifetime is
+
+- **Singleton** - one instance (taking into account the tag and the set abstraction) per entire container,
+
+
+- **Transient** - a completely new instance is created each time. The old one is not cleaned up
 
 ## Floating registration
 Immediately after using the **Register method** the container constructor gives you access to specify additional parameters for the dependency.
