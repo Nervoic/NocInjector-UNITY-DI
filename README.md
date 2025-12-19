@@ -17,6 +17,7 @@ NocInjector is a modern, high-performance, lightweight DI library for Unity, des
 - Method and constructor injection
 - Dependency parameters during registration
 - Dependency lifetimes
+- Automaticully dispose
 
 ## Usage
 To use the library, you need to
