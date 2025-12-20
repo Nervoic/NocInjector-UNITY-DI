@@ -13,36 +13,31 @@ namespace NocInjector
         private readonly ConstructionDependencies _constructionDependencies = new();
 
         private bool _isConstructed = false;
-        private readonly object _constructLock = new();
-        
-        
-        
+
+
+
         /// <summary>
         /// Creates a new dependency registration branch.
         /// </summary>
         /// <param name="lifetime">The lifetime for the dependency being registered</param>
         /// <typeparam name="TDependencyType">The specific type of the dependency being registered</typeparam>
         /// <returns></returns>
-        public ConstructorRegistration<TDependencyType> Register<TDependencyType>(DependencyLifetime lifetime) 
+        public ConstructorRegistration<TDependencyType> Register<TDependencyType>(DependencyLifetime lifetime)
             where TDependencyType : class
         {
             if (_isConstructed)
                 throw new InvalidOperationException($"You cannot start registration after building the container");
-            
-            lock (_constructLock)
-            {
-                var dependencyType = typeof(TDependencyType);
-                
-                _validator.ValidateRegistration(dependencyType);
-                
-                var constructionDependency = new Dependency(dependencyType);
-                _constructionDependencies.Add(constructionDependency, lifetime);
+            var dependencyType = typeof(TDependencyType);
 
-                return new ConstructorRegistration<TDependencyType>(_constructionDependencies, constructionDependency);
-            }
+            _validator.ValidateRegistration(dependencyType);
+
+            var constructionDependency = new Dependency(dependencyType);
+            _constructionDependencies.Add(constructionDependency, lifetime);
+
+            return new ConstructorRegistration<TDependencyType>(_constructionDependencies, constructionDependency);
         }
-        
-        
+
+
         /// <summary>
         /// Creates a new dependency registration branch.
         /// </summary>
@@ -50,42 +45,36 @@ namespace NocInjector
         /// <typeparam name="TAbstractionType">The type of abstraction that can be used to obtain the dependency</typeparam>
         /// <typeparam name="TDependencyType">The specific type of dependency being registered</typeparam>
         /// <returns></returns>
-        public ConstructorRegistration<TAbstractionType> Register<TAbstractionType, TDependencyType>(DependencyLifetime lifetime) 
+        public ConstructorRegistration<TAbstractionType> Register<TAbstractionType, TDependencyType>(DependencyLifetime lifetime)
             where TAbstractionType : class
             where TDependencyType : class, TAbstractionType
         {
             if (_isConstructed)
                 throw new InvalidOperationException($"You cannot start registration after building the container");
-            
-            lock (_constructLock)
-            {
-                var dependencyType = typeof(TDependencyType);
-                var abstractionType = typeof(TAbstractionType);
-                
-                _validator.ValidateRegistration(dependencyType, abstractionType);
 
-                var constructionDependency = new Dependency(dependencyType, abstractionType);
-                _constructionDependencies.Add(constructionDependency, lifetime);
+            var dependencyType = typeof(TDependencyType);
+            var abstractionType = typeof(TAbstractionType);
 
-                return new ConstructorRegistration<TAbstractionType>(_constructionDependencies, constructionDependency);
-            }
+            _validator.ValidateRegistration(dependencyType, abstractionType);
+
+            var constructionDependency = new Dependency(dependencyType, abstractionType);
+            _constructionDependencies.Add(constructionDependency, lifetime);
+
+            return new ConstructorRegistration<TAbstractionType>(_constructionDependencies, constructionDependency);
         }
 
         public (IDependencyInjector, IDependencyContainer) Construct(IDependencyContainer parentContainer = null)
         {
             if (_isConstructed)
                 throw new InvalidOperationException($"You cannot start construction after building the container");
-            
-            lock (_constructLock)
-            {
-                var storage = new DependenciesStorage();
-                var container = new DependencyContainer(storage, parentContainer);
 
-                var injector = ConstructLifetimes(container, storage);
+            var storage = new DependenciesStorage();
+            var container = new DependencyContainer(storage, parentContainer);
 
-                _isConstructed = true;
-                return (injector, container);
-            }
+            var injector = ConstructLifetimes(container, storage);
+
+            _isConstructed = true;
+            return (injector, container);
         }
 
         private IDependencyInjector ConstructLifetimes(IDependencyContainer container, DependenciesStorage storage)

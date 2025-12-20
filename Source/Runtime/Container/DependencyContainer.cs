@@ -42,7 +42,7 @@ namespace NocInjector
         public void Dispose()
         {
             if (_disposed)
-                throw new ObjectDisposedException(nameof(DependencyContainer));
+                return;
 
             _disposed = true;
             

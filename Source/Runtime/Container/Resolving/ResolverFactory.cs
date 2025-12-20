@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -6,7 +7,7 @@ namespace NocInjector
 {
     internal class ResolverFactory
     {
-        private readonly Dictionary<Type, IResolver> _typeResolvers = new();
+        private readonly ConcurrentDictionary<Type, IResolver> _typeResolvers = new();
         
         private readonly HashSet<IResolver> _resolveMethods = new()
         {
@@ -31,7 +32,7 @@ namespace NocInjector
             if (resolver is null)
                 throw new ResolveUnsupportedTypeException(dependencyType);
             
-            _typeResolvers.Add(dependencyType, resolver);
+            _typeResolvers.TryAdd(dependencyType, resolver);
             return resolver;
 
         }

@@ -48,7 +48,7 @@ namespace NocInjector
         public void Dispose()
         {
             if (_disposed)
-                throw new ObjectDisposedException(nameof(Singleton));
+                return;
 
             _disposed = true;
             

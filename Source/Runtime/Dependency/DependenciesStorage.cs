@@ -1,37 +1,24 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 
 namespace NocInjector
 {
     internal sealed class DependenciesStorage : IDependenciesStorage
     {
-        private readonly DependenciesCacheStorage _cacheStorage = new();
-        private readonly Dictionary<IDependency, LifetimeImplementation> _lifetimeContainer = new();
+        private readonly CacheStorage _cacheStorage = new();
+        private readonly ConcurrentDictionary<IDependency, LifetimeImplementation> _lifetimeContainer;
 
         private bool _disposed;
 
         public void Add(IDependency dependency, LifetimeImplementation lifetime)
         {
-            if (_disposed)
-                throw new ObjectDisposedException(nameof(DependenciesStorage));
-            
             if (!_lifetimeContainer.TryAdd(dependency, lifetime))
                 throw new DependencyExistException(dependency);
             
             _cacheStorage.CacheDependency(dependency);
         }
-
-        public void Remove(IDependency dependency)
-        {
-            if (_disposed)
-                throw new ObjectDisposedException(nameof(DependenciesStorage));
-            
-            if (!_lifetimeContainer.Remove(dependency))
-                throw new DependencyUnexistException(dependency);
-            
-            _cacheStorage.InvalidateCache(dependency);
-        }
-
+        
         public IDependency GetDependency(Type dependencyType, string dependencyTag)
         {
             if (_disposed)
@@ -77,7 +64,7 @@ namespace NocInjector
         public void Dispose()
         {
             if (_disposed)
-                throw new ObjectDisposedException(nameof(DependenciesStorage));
+                return;
 
             _disposed = true;
 

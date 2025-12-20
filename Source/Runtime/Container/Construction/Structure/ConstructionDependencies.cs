@@ -1,15 +1,15 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections.Concurrent;
+using System.Collections.Generic;
 
 namespace NocInjector
 {
     internal sealed class ConstructionDependencies
     {
-        private readonly Dictionary<Dependency, DependencyLifetime> _constructionDependencies = new();
+        private readonly ConcurrentDictionary<Dependency, DependencyLifetime> _constructionDependencies = new();
         
+        public void Add(Dependency dependency, DependencyLifetime lifetime) => _constructionDependencies.TryAdd(dependency, lifetime);
 
-        public void Add(Dependency dependency, DependencyLifetime lifetime) => _constructionDependencies.Add(dependency, lifetime);
-
-        public void Remove(Dependency dependency) => _constructionDependencies.Remove(dependency);
+        public void Remove(Dependency dependency) => _constructionDependencies.TryRemove(dependency, out _);
         
 
         public IReadOnlyDictionary<Dependency, DependencyLifetime> GetDictionary() => _constructionDependencies;
