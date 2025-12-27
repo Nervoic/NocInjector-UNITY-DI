@@ -52,15 +52,15 @@ namespace NocInjector
         
         private void Construct(IInstaller[] installers, IContext parentContext = null)
         {
-            var constructor = new ContainerConstructor();
+            var builder = new ContainerBuilder();
 
             foreach (var installer in installers)
-                installer.Install(constructor);
+                installer.Install(builder);
 
-            var constructionResult = constructor.Construct(parentContext?.Container);
+            var buildingResult = builder.Build();
 
-            Injector = constructionResult.Item1;
-            Container = constructionResult.Item2;
+            Injector = buildingResult.Item1;
+            Container = buildingResult.Item2;
         }
 
         public void Dispose()

@@ -4,21 +4,32 @@ namespace NocInjector
 {
     internal sealed class DependencyContainer : IDependencyContainer
     {
-        private readonly IDependencyContainer _parentContainer;
-        private readonly IDependenciesStorage _dependenciesStorage;
-        
-        private readonly ContainerResolver _resolver = new();
+        public IDependencyContainer Parent { get; }
 
-        private bool _disposed = false;
+        private readonly DependenciesStorage _storage;
+        private readonly DependenciesResolver _resolver;
+
+        private bool _disposed;
         
         
-        internal DependencyContainer(IDependenciesStorage storage, IDependencyContainer parentContainer = null)
+        internal DependencyContainer(IDependencyContainer parentContainer, DependenciesStorage storage, DependenciesResolver resolver)
         {
-            if (parentContainer == this)
-                throw new ArgumentException($"{nameof(parentContainer)} cannot be a parent of itself");
+            if (parentContainer is not null)
+            {
+                if (parentContainer == this)
+                    throw new ContainerInheritanceException($"{nameof(parentContainer)} cannot be a parent of itself");
 
-            _parentContainer = parentContainer;
-            _dependenciesStorage = storage;
+                while (parentContainer.Parent is not null)
+                {
+                    if (parentContainer.Parent == this)
+                        throw new ContainerInheritanceException("Cyclic inheritance in containers");
+                }
+            }
+
+            Parent = parentContainer;
+
+            _storage = storage;
+            _resolver = resolver;
         }
 
 
@@ -27,13 +38,13 @@ namespace NocInjector
             if (_disposed)
                 throw new ObjectDisposedException(nameof(DependencyContainer));
             
-            var dependencyInstance = _resolver.Resolve(dependencyType, dependencyTag, _dependenciesStorage);
+            var dependencyInstance = _resolver.Resolve(dependencyType, dependencyTag);
 
             if (dependencyInstance is not null)
                 return dependencyInstance;
 
-            return _parentContainer is not null
-                ? _parentContainer.Resolve(dependencyType, dependencyTag)
+            return Parent is not null
+                ? Parent.Resolve(dependencyType, dependencyTag)
                 : throw new DependencyMissingException(dependencyType, dependencyTag);
         }
 
@@ -46,7 +57,7 @@ namespace NocInjector
 
             _disposed = true;
             
-            _dependenciesStorage.Dispose();
+            _storage.Dispose();
         }
     }
 }

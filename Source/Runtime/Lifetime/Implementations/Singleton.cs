@@ -5,13 +5,13 @@ using Object = UnityEngine.Object;
 
 namespace NocInjector
 {
-    internal sealed class Singleton : LifetimeImplementation, IDisposable
+    public sealed class Singleton : LifetimeImplementation, IDisposable
     {
         private object _dependencyInstance;
         private bool _disposed;
-        public Singleton(IDependency linkedDependency, IInstanceHandler instanceHandler) : base(linkedDependency, instanceHandler)
+        internal Singleton(IDependency dependency, IInstanceHandler instanceHandler) : base(dependency, instanceHandler)
         {
-            _dependencyInstance = linkedDependency.Instance ?? GetSingleton();
+            _dependencyInstance = dependency.Instance ?? GetSingleton();
         }
 
         public override object GetInstance()
@@ -24,11 +24,11 @@ namespace NocInjector
 
         private object GetSingleton()
         {
-            var dependencyType = LinkedDependency.DependencyType;
+            var dependencyType = Dependency.DependencyType;
 
             if (dependencyType.IsSubclassOf(typeof(MonoBehaviour)))
             {
-                var dependencyObject = LinkedDependency.DependencyObject;
+                var dependencyObject = Dependency.DependencyObject;
 
                 if (dependencyObject is null)
                     _dependencyInstance = Object.FindAnyObjectByType(dependencyType) ?? throw new InvalidOperationException($"{dependencyType.Name} it does not exist on any object on the scene");

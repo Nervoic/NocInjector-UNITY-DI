@@ -10,7 +10,7 @@ namespace NocInjector
         /// <summary>
         /// Sets dependencies in the container being assembled
         /// </summary>
-        /// <param name="constructor">Container constructor</param>
-        public abstract void Install(IContainerConstructor constructor);
+        /// <param name="builder">Container constructor</param>
+        public abstract void Install(IContainerBuilder builder);
     }
 }

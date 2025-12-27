@@ -1,21 +1,18 @@
 ﻿
-using System;
-
 namespace NocInjector
 {
-    internal abstract class LifetimeImplementation
-
+    public abstract class LifetimeImplementation
     {
         /// <summary>
         /// Dependency belonging to this lifetime
         /// </summary>
-        protected IDependency LinkedDependency { get; }
+        internal IDependency Dependency { get; }
         
-        protected IInstanceHandler InstanceHandler { get; }
+        internal IInstanceHandler InstanceHandler { get; }
 
-        protected LifetimeImplementation(IDependency linkedDependency, IInstanceHandler instanceHandler)
+        internal LifetimeImplementation(IDependency dependency, IInstanceHandler instanceHandler)
         {
-            LinkedDependency = linkedDependency;
+            Dependency = dependency;
             InstanceHandler = instanceHandler;
         }
 

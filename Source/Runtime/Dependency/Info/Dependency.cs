@@ -11,9 +11,11 @@ namespace NocInjector
         public Type DependencyType { get; }
         public Type AbstractionType { get; }
 
+        public LifetimeImplementation LifetimeImplementation { get; set; }
+        public GameObject DependencyObject { get; set; }
+
         public string DependencyTag { get; set; }
         public object Instance { get; set; }
-        public GameObject DependencyObject { get; set; }
 
         public Dependency(Type dependencyType, Type abstractionType = null)
         {

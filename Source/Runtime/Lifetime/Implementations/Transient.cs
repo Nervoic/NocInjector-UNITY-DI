@@ -1,26 +1,25 @@
 ﻿
-using System;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
 namespace NocInjector
 {
-    internal sealed class Transient : LifetimeImplementation
+    public sealed class Transient : LifetimeImplementation
     {
         
-        public Transient(IDependency linkedDependency, IInstanceHandler instanceHandler) : base(linkedDependency, instanceHandler)
+        internal Transient(IDependency dependency, IInstanceHandler instanceHandler) : base(dependency, instanceHandler)
         {
             
         }
 
         public override object GetInstance()
         {
-            var dependencyType = LinkedDependency.DependencyType;
+            var dependencyType = Dependency.DependencyType;
             object dependencyInstance;
             
             if (dependencyType.IsSubclassOf(typeof(MonoBehaviour)))
             {
-                var dependencyObject = LinkedDependency.DependencyObject;
+                var dependencyObject = Dependency.DependencyObject;
 
                 var createdObject = Object.Instantiate(dependencyObject);
                 

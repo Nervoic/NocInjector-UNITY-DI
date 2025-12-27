@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace NocInjector
 {
-    internal sealed class DependencyInjector : IDependencyInjector, IInstanceHandler
+    internal sealed class DependencyInjector : IInstanceHandler
     {
         private readonly IDependencyContainer _linkedContainer;
         public DependencyInjector(IDependencyContainer linkedContainer)
@@ -19,24 +19,22 @@ namespace NocInjector
 
             if (injectConstructor is null)
             {
-                var createdInstance = Activator.CreateInstance(dependencyType);
-                InjectInstance(createdInstance);
+                var createdInstance = InjectInstance(Activator.CreateInstance(dependencyType));
 
                 return createdInstance;
             }
 
             var acceptedDependencies = injectConstructor.GetParameters();
             var dependenciesInstances = GetInjectedParameters(acceptedDependencies);
-            
+
             var injectedInstance = injectConstructor.Invoke(dependenciesInstances);
-            InjectInstance(injectedInstance);
             
             return injectedInstance;
         }
 
-        public void InjectInstance(object initializableInstance)
+        public object InjectInstance(object injectableInstance)
         {
-            var injectableMethods = initializableInstance.GetType()
+            var injectableMethods = injectableInstance.GetType()
                 .GetMethods()
                 .Where(method => method.IsDefined(typeof(Inject)))
                 .OrderBy(method => method.GetCustomAttribute<Inject>().InjectionOrder);
@@ -47,8 +45,10 @@ namespace NocInjector
 
                 var dependenciesInstances = GetInjectedParameters(acceptedDependencies);
 
-                injectableMethod.Invoke(initializableInstance, dependenciesInstances);
+                injectableMethod.Invoke(injectableInstance, dependenciesInstances);
             }
+
+            return injectableInstance;
         }
 
         public void InjectObject(GameObject injectableObject)

@@ -16,19 +16,11 @@ namespace NocInjector
             [DependencyLifetime.Singleton] = (dependency, instanceHandler) => new Singleton(dependency, instanceHandler),
             [DependencyLifetime.Transient] = (dependency, instanceHandler) => new Transient(dependency, instanceHandler),
         };
-
-        private readonly DependencyInjector _dependencyInjector;
-
-        public LifetimeFactory(DependencyInjector dependencyInjector)
-        {
-            _dependencyInjector = dependencyInjector;
-        }
         
-        
-        public LifetimeImplementation GetImplementation(DependencyLifetime lifetime, IDependency dependency)
+        public LifetimeImplementation CreateImplementation(IDependency dependency, IInstanceHandler instanceHandler, DependencyLifetime lifetime)
         {
             return _implementations.TryGetValue(lifetime, out var implementation)
-                ? implementation(dependency, _dependencyInjector)
+                ? implementation(dependency, instanceHandler)
                 : throw new UnidentifiedLifetimeException(lifetime);
         }
     }

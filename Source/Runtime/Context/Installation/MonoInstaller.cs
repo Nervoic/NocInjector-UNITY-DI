@@ -8,6 +8,6 @@ namespace NocInjector
     /// </summary>
     public abstract class MonoInstaller : MonoBehaviour, IInstaller
     {
-        public abstract void Install(IContainerConstructor constructor);
+        public abstract void Install(IContainerBuilder builder);
     }
 }

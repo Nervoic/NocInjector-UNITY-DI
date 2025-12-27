@@ -50,7 +50,7 @@ If a component is registered as Transient, then when this component is requested
 
 ## Standard Injection -
 
-If you register a dependency in a container that is not a component, you can use the **[Inject]** attribute in the dependency's constructor. Method injection will also work in this case.
+If you register a dependency in a container that is not a component, you can use the **[Inject]** attribute in the dependency's constructor. Method injection not work in this case.
 
 ## Other
 We also recommend that you read the registration documentation, which describes the registration process in detail.

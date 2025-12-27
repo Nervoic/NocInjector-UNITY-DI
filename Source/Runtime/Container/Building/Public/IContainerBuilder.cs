@@ -1,6 +1,6 @@
 ﻿namespace NocInjector
 {
-    public interface IContainerConstructor
+    public interface IContainerBuilder
     {
         /// <summary>
         /// Registers a dependency in the constructor's builder.
@@ -8,7 +8,7 @@
         /// <param name="lifetime">Dependency lifetime</param>
         /// <typeparam name="TDependencyType">Type of the dependency being registered</typeparam>
         /// <returns></returns>
-        public ConstructorRegistration<TDependencyType> Register<TDependencyType>(DependencyLifetime lifetime) 
+        public DependencyRegistration<TDependencyType> Register<TDependencyType>(DependencyLifetime lifetime) 
             where TDependencyType : class;
 
         /// <summary>
@@ -18,7 +18,7 @@
         /// <typeparam name="TAbstractionType">Dependency abstraction</typeparam>
         /// <typeparam name="TDependencyType">Dependency type</typeparam>
         /// <returns></returns>
-        public ConstructorRegistration<TAbstractionType> Register<TAbstractionType, TDependencyType>(DependencyLifetime lifetime)
+        public DependencyRegistration<TAbstractionType> Register<TAbstractionType, TDependencyType>(DependencyLifetime lifetime)
             where TAbstractionType : class
             where TDependencyType : class, TAbstractionType;
 

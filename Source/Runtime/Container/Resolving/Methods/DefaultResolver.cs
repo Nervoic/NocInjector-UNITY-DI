@@ -13,8 +13,8 @@ namespace NocInjector
         {
             if (!dependenciesSource.TryGetDependency(dependencyType, dependencyTag, out var dependency))
                 return null;
-            
-            var lifetimeImplementation = dependenciesSource.GetLifetime(dependency);
+
+            var lifetimeImplementation = dependency.LifetimeImplementation;
 
             return lifetimeImplementation.GetInstance();
         }

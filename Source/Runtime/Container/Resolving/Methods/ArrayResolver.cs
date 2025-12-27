@@ -29,7 +29,7 @@ namespace NocInjector
             for (var i = 0; i < dependenciesInstances.Length; i++)
             {
                 var currentDependency = dependenciesArray[i];
-                var lifetimeImplementation = dependenciesSource.GetLifetime(currentDependency);
+                var lifetimeImplementation = currentDependency.LifetimeImplementation;
 
                 dependenciesInstances[i] = lifetimeImplementation.GetInstance();
             }

@@ -1,9 +1,7 @@
 ﻿
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using UnityEngine;
-using Debug = UnityEngine.Debug;
 
 namespace NocInjector
 {
@@ -37,15 +35,15 @@ namespace NocInjector
         protected void Awake() => Initialize();
         private void Initialize()
         {
-            var constructor = new ContainerConstructor();
+            var builder = new ContainerBuilder();
             
             foreach (var installer in installers.Where(i => i is not null))
-                installer.Install(constructor);
+                installer.Install(builder);
 
-            var constructionResult = constructor.Construct(parentContext?.Container);
+            var buildingResult = builder.Build();
 
-            Injector = constructionResult.Item1;
-            Container = constructionResult.Item2;
+            Injector = buildingResult.Item1;
+            Container = buildingResult.Item2;
             
             InjectObjects();
             OnInitialize();

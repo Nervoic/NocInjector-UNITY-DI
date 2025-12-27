@@ -97,6 +97,7 @@ public class CustomBehaviour : MonoBehaviour
 {
     private MyClass _classInstance;
     
+    [Inject]
     public void Construct(MyClass classInstance) 
     {
         _classInstance = classInstance;
