@@ -15,9 +15,9 @@ namespace NocInjector
         
         public object Resolve(Type dependencyType, string dependencyTag)
         {
-            var resolveMethod = _resolverFactory.SelectResolver(dependencyType);
+            var resolver = _resolverFactory.SelectResolver(dependencyType);
 
-            return resolveMethod.Resolve(dependencyType, dependencyTag, _dependenciesSource);
+            return resolver.Resolve(dependencyType, dependencyTag, _dependenciesSource);
         }
     }
 }

@@ -17,7 +17,7 @@ namespace NocInjector
             [DependencyLifetime.Transient] = (dependency, instanceHandler) => new Transient(dependency, instanceHandler),
         };
         
-        public LifetimeImplementation CreateImplementation(IDependency dependency, IInstanceHandler instanceHandler, DependencyLifetime lifetime)
+        public LifetimeImplementation Create(IDependency dependency, IInstanceHandler instanceHandler, DependencyLifetime lifetime)
         {
             return _implementations.TryGetValue(lifetime, out var implementation)
                 ? implementation(dependency, instanceHandler)

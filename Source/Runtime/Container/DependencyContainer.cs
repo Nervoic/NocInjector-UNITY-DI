@@ -6,13 +6,13 @@ namespace NocInjector
     {
         public IDependencyContainer Parent { get; }
 
-        private readonly DependenciesStorage _storage;
+        private readonly IDependenciesStorage _storage;
         private readonly DependenciesResolver _resolver;
 
         private bool _disposed;
         
         
-        internal DependencyContainer(IDependencyContainer parentContainer, DependenciesStorage storage, DependenciesResolver resolver)
+        internal DependencyContainer(IDependencyContainer parentContainer, IDependenciesStorage storage, DependenciesResolver resolver)
         {
             if (parentContainer is not null)
             {

@@ -9,7 +9,7 @@ namespace NocInjector
         private readonly ConcurrentDictionary<Type, List<IDependency>> _typeStorage = new();
         private readonly ConcurrentDictionary<(Type, string), IDependency> _infoStorage = new();
 
-        private bool _disposed;
+        private bool _disposed = false;
 
         public DependenciesStorage(IEnumerable<IDependency> dependencies)
         {
@@ -61,9 +61,10 @@ namespace NocInjector
 
         public bool TryGetDependency(Type dependencyType, string dependencyTag, out IDependency dependency)
         {
-            return _disposed
-                ? _infoStorage.TryGetValue((dependencyType, dependencyTag), out dependency)
-                : throw new ObjectDisposedException(nameof(DependenciesStorage));
+            if (_disposed)
+                throw new ObjectDisposedException(nameof(DependenciesStorage));
+
+            return _infoStorage.TryGetValue((dependencyType, dependencyTag), out dependency);
         }
 
         public bool TryGetDependencies(Type dependencyType, out IEnumerable<IDependency> dependencies)

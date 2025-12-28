@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace NocInjector
 {
-    internal class ResolverFactory
+    internal sealed class ResolverFactory
     {
         private readonly ConcurrentDictionary<Type, IResolver> _typeResolvers = new();
         

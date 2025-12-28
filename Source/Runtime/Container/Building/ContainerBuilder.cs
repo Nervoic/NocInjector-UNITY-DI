@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using NocInjector.Exceptions;
-using UnityEngine;
 
 namespace NocInjector
 {
@@ -12,12 +11,18 @@ namespace NocInjector
     internal sealed class ContainerBuilder : IContainerBuilder
     {
         private readonly BuilderValidator _validator = new();
+        
+        private readonly DependencyBuilder _dependencyBuilder;
 
-        private readonly Dictionary<Dependency, DependencyLifetime> _registeredDependencies;
+        private readonly Dictionary<Dependency, DependencyLifetime> _registeredDependencies = new();
 
         private bool _isBuilt;
 
 
+        public ContainerBuilder()
+        {
+            _dependencyBuilder = new DependencyBuilder(_registeredDependencies);
+        }
 
         /// <summary>
         /// Creates a new dependency registration branch.
@@ -76,25 +81,10 @@ namespace NocInjector
             var resolver = new DependenciesResolver(storage);
             
             var container = new DependencyContainer(parentContainer, storage, resolver);
-            var injector = InitializeLifetimes(container);
+            var injector = _dependencyBuilder.Build(container);
 
             _isBuilt = true;
             return (injector, container);
-        }
-
-        private IDependencyInjector InitializeLifetimes(IDependencyContainer container)
-        {
-            var injector = new DependencyInjector(container);
-            var lifetimeFactory = new LifetimeFactory();
-            
-            foreach (var (registeredDependency, lifetime) in _registeredDependencies)
-            {
-                _validator.ValidateBuild(registeredDependency);
-
-                registeredDependency.LifetimeImplementation = lifetimeFactory.CreateImplementation(registeredDependency, injector, lifetime);
-            }
-
-            return injector;
         }
         
         private sealed class BuilderValidator
@@ -117,20 +107,11 @@ namespace NocInjector
 
                 if (abstractionType is not null)
                 {
-                    if (!abstractionType.IsAbstract)
+                    if (!abstractionType.IsInterface || !abstractionType.IsAbstract)
                         throw new ArgumentException($"Cannot register {abstractionType.Name} as an abstraction of {dependencyType.Name} because it is not abstract");
 
                     _validatedRegistrationTypes.Add(abstractionType);
                 }
-            }
-
-            public void ValidateBuild(IDependency constructionDependency)
-            {
-                var constructionDependencyType = constructionDependency.DependencyType;
-            
-                if (constructionDependencyType.IsSubclassOf(typeof(MonoBehaviour)) && constructionDependency.DependencyObject == null)
-                    throw new InvalidOperationException($"You cannot register the {constructionDependency.DependencyType.Name} component without setting its GameObject");
-            
             }
         }
         
