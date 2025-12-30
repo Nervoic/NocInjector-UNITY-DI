@@ -40,7 +40,7 @@ namespace NocInjector
             foreach (var installer in installers.Where(i => i is not null))
                 installer.Install(builder);
 
-            var buildingResult = builder.Build();
+            var buildingResult = builder.Build(parentContext?.Container);
 
             Injector = buildingResult.Item1;
             Container = buildingResult.Item2;

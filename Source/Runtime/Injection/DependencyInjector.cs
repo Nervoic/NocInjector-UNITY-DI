@@ -35,7 +35,7 @@ namespace NocInjector
         public object InjectInstance(object injectableInstance)
         {
             var injectableMethods = injectableInstance.GetType()
-                .GetMethods()
+                .GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
                 .Where(method => method.IsDefined(typeof(Inject)))
                 .OrderBy(method => method.GetCustomAttribute<Inject>().InjectionOrder);
 
